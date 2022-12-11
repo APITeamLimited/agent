@@ -3,6 +3,7 @@ package agent
 import (
 	"fmt"
 	"os"
+	"runtime"
 
 	"github.com/getlantern/systray"
 	"github.com/pkg/browser"
@@ -12,10 +13,7 @@ func Run() {
 	fmt.Println("Running agent")
 
 	systrayContent := func() {
-		logoIcon, err := os.ReadFile("apiteam-logo.png")
-		if err != nil {
-			panic(err)
-		}
+		logoIcon := getAgentIcon()
 
 		systray.SetIcon(logoIcon)
 		systray.SetTitle("APITeam Agent")
@@ -60,4 +58,19 @@ func Run() {
 	systray.Run(systrayContent, func() {
 		os.Exit(0)
 	})
+}
+
+func getAgentIcon() []byte {
+	fileName := "apiteam-logo.png"
+
+	if runtime.GOOS == "windows" {
+		fileName = "apiteam-logo.ico"
+	}
+
+	logoIcon, err := os.ReadFile(fileName)
+	if err != nil {
+		panic(err)
+	}
+
+	return logoIcon
 }

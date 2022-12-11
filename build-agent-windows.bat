@@ -27,9 +27,9 @@ GOOS=windows GOARCH=amd64 go build -o apiteam-agent.exe
 mv apiteam-agent.exe build-agent-windows/apiteam-agent.exe
 
 # Copy files to build directory
-cp agent/targets/linux/apiteam-agent.desktop build-agent-windows/apiteam-agent.desktop
-cp agent/targets/linux/snapcraft.yaml build-agent-windows/snapcraft.yaml
-cp agent/targets/linux/run.sh build-agent-windows/run.sh
+cp targets/linux/apiteam-agent.desktop build-agent-windows/apiteam-agent.desktop
+cp targets/linux/snapcraft.yaml build-agent-windows/snapcraft.yaml
+cp targets/linux/run.sh build-agent-windows/run.sh
 cp apiteam-logo.png build-agent-windows/apiteam-logo.png
 
 # Build snap

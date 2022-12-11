@@ -11,7 +11,7 @@ cd build-agent-darwin
 mv apiteam-agent build-agent-darwin/apiteam-agent
 
 # Copy files to build directory
-cp -r agent/targets/darwin build-agent-darwin
+cp -r targets/darwin build-agent-darwin
 cp apiteam-logo.png build-agent-darwin/apiteam-logo.png
 
 # Clone redis source code into build-agent-darwin directory from github
