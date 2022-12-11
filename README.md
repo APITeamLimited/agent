@@ -17,6 +17,6 @@ $ go build main.go -o apiteam-agent
 
 ## Usage
 
-APITeam Agent is designed to be used alongside the APITeam Web App. You can create an account for free at [apiteam.com](https://apiteam.cloud).
+APITeam Agent is designed to be used alongside the APITeam Web App. You can create an account for free at [apiteam.cloud](https://apiteam.cloud).
 
 For more information on how to use APITeam Agent, please refer to the [APITeam documentation](https://apiteam.cloud/docs).
