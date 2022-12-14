@@ -15,7 +15,7 @@ const AgentWorkerName = "localhost"
 const WorkerRedisHost = "localhost"
 const WorkerRedisPort = "59127"
 
-const AgentVersion = "0.0.1"
+const AgentVersion = "0.1.0"
 
 type (
 	ClientLocalTestManagerMessage struct {
@@ -37,7 +37,6 @@ type (
 )
 
 // Server relays some messages back when successful
-
 type (
 	ServerLocalTestManagerMessage struct {
 		Type string `json:"type"`

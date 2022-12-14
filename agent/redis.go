@@ -66,7 +66,7 @@ func getRedisFileName() string {
 	return "redis-server-agent"
 }
 
-// Instructs the redis servers to kill themselves
+// Instructs the redis servers to immediately terminate
 func stopRedisClients() {
 	orchestratorRedis := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", libAgent.OrchestratorRedisHost, libAgent.OrchestratorRedisPort),
