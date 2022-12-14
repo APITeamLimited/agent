@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"runtime"
@@ -9,6 +10,7 @@ import (
 	"github.com/APITeamLimited/agent/redis_server"
 	"github.com/APITeamLimited/globe-test/orchestrator/orchestrator"
 	"github.com/APITeamLimited/globe-test/worker/worker"
+	"github.com/APITeamLimited/redis/v9"
 	"github.com/getlantern/byteexec"
 )
 
@@ -62,4 +64,22 @@ func getRedisFileName() string {
 	}
 
 	return "redis-server-agent"
+}
+
+// Instructs the redis servers to kill themselves
+func stopRedisClients() {
+	orchestratorRedis := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%s", libAgent.OrchestratorRedisHost, libAgent.OrchestratorRedisPort),
+		Username: "default",
+		Password: "",
+	})
+
+	workerRedis := redis.NewClient(&redis.Options{
+		Addr:     fmt.Sprintf("%s:%s", libAgent.WorkerRedisHost, libAgent.WorkerRedisPort),
+		Username: "default",
+		Password: "",
+	})
+
+	orchestratorRedis.ShutdownNoSave(context.Background())
+	workerRedis.ShutdownNoSave(context.Background())
 }

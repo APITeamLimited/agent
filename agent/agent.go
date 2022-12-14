@@ -55,6 +55,7 @@ func Run() {
 	}
 
 	systray.Run(systrayContent, func() {
+		stopRedisClients()
 		os.Exit(0)
 	})
 }
