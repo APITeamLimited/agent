@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
+	"time"
 
 	"github.com/APITeamLimited/agent/agent/libAgent"
 	"github.com/APITeamLimited/globe-test/lib"
@@ -49,4 +50,15 @@ func processAbortion(job libOrch.Job, runningJobs *map[string]libOrch.Job, setJo
 
 	marshalledCancel, _ := json.Marshal(cancelMessage)
 	orchestratorClient.Publish(context.Background(), fmt.Sprintf("jobUserUpdates:%s:%s:%s", job.Scope.Variant, job.Scope.VariantTargetId, job.Id), string(marshalledCancel))
+
+	// Sometimes non-existent jobs are shown, so just remove them from the list after
+	// a reasonable amount of time
+	go func() {
+		// Wait 5 seconds for the job to stop
+		time.Sleep(5 * time.Second)
+
+		// Delete the job from the running jobs map
+		delete(*runningJobs, job.Id)
+		setJobCount(len(*runningJobs))
+	}()
 }
