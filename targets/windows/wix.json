@@ -1,0 +1,35 @@
+{
+  "product": "APITeam Agent",
+  "company": "APITeam Limited",
+  "license": "LICENSE",
+  "upgrade-code": "cc87b6e2-a62b-45d0-a53d-17b322563272",
+  "files": {
+    "guid": "e28867d4-3102-4068-b86e-7809e45776b4",
+    "items": [
+      "build-windows/apiteam-agent.exe"
+    ]
+  },
+  "env": {
+    "guid": "",
+    "vars": []
+  },
+  "shortcuts": {
+    "guid": "bddf28e7-6921-4f04-b894-de4be4f42c68",
+    "items": [
+      {
+        "name": "APITeam Agent",
+        "description": "Debug and load test your local APIs and stream the results to the APITeam Platformo",
+        "target": "[INSTALLDIR]\\apiteam-agent.exe",
+        "wdir": "INSTALLDIR",
+        "arguments": "",
+        "icon": "logo/apiteam-logo.ico"
+      }
+    ]
+  },
+  "choco": {
+    "description": "Debug and load test your local APIs and stream the results to the APITeam Platform",
+    "project-url": "https://apiteam.cloud/agent",
+    "tags": "Development",
+    "license-url": "https://github.com/APITeamLimited/agent/blob/main/LICENSE.md"
+  }
+}

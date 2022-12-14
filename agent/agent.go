@@ -21,7 +21,6 @@ func Run() {
 
 		// Add non clickable menu item with name and icon
 		mTitle := systray.AddMenuItem("About APITeam Agent", "About APITeam Agent")
-		mTitle.SetIcon(logoIcon)
 
 		systray.AddSeparator()
 		mAbortAll := systray.AddMenuItem("Abort All", "Abort All")
