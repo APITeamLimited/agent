@@ -1,10 +1,11 @@
 package agent
 
 import (
+	_ "embed"
 	"fmt"
 	"os"
-	"runtime"
 
+	"github.com/APITeamLimited/agent/logo"
 	"github.com/getlantern/systray"
 	"github.com/pkg/browser"
 )
@@ -13,8 +14,7 @@ func Run() {
 	fmt.Println("Running agent")
 
 	systrayContent := func() {
-		logoIcon := getAgentIcon()
-
+		logoIcon := logo.AgentLogo
 		systray.SetIcon(logoIcon)
 		systray.SetTitle("APITeam Agent")
 		systray.SetTooltip("APITeam Agent")
@@ -58,19 +58,4 @@ func Run() {
 	systray.Run(systrayContent, func() {
 		os.Exit(0)
 	})
-}
-
-func getAgentIcon() []byte {
-	fileName := "apiteam-logo.png"
-
-	if runtime.GOOS == "windows" {
-		fileName = "apiteam-logo.ico"
-	}
-
-	logoIcon, err := os.ReadFile(fileName)
-	if err != nil {
-		panic(err)
-	}
-
-	return logoIcon
 }

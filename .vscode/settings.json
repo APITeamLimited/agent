@@ -1,0 +1,5 @@
+{
+    "go.buildFlags": [
+        "-tags=windows linux darwin-amd64 darwin-arm"
+    ]
+}

@@ -1,0 +1,26 @@
+{
+    "name": "apiteam-agent",
+    "maintainer": "APITeam Limited <support@apiteam.cloud>",
+    "description": "APITeam Agent - Debug and load test your local APIs and stream the results to the APITeam Platform",
+    "homepage": "https://apiteam.cloud/agent",
+    "arch": "amd64",
+    "version": "0.0.2",
+    "files": [
+    {
+        "from": "build-agent-linux/apiteam-agent",
+        "to": "usr/bin",
+        "base" : "build-agent-linux/",
+        "fperm": "0755"
+    }
+    ],
+    "menus": [
+    {
+        "name": "APITeam Agent",
+        "description": "Local API Development and Load Testing",
+        "icon": "logo/apiteam-logo.png",
+        "exec": "apiteam-agent",
+        "categories": "Development;",
+        "startup-notify": true
+    }
+    ]
+}

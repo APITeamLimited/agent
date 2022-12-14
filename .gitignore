@@ -4,7 +4,6 @@
 /pkg-build
 /js/tc39/TestTC39
 
-.vscode
 *.sublime-workspace
 *.log
 *.syso
@@ -28,7 +27,6 @@ main
 *.rdb
 
 build-agent*/
-
 
 # In case a go file has private in its name
 !*.go
