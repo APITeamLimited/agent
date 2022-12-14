@@ -15,4 +15,5 @@ GOOS=darwin GOARCH=amd64 go build -o build-darwin-intel/APITeam\ Agent.app/Conte
 # Recursively remove all gitkeep files
 find . -name ".gitkeep" -type f -delete
 
-echo "One more step - now create dmg file frrom Disk Utility"
+# Use pckgbuild to create a package from the build directory
+pkgbuild --root build-darwin-intel --identifier cloud.apiteam.agent --version 0.1.0 --install-location /Applications/APITeam\ Agent.app build-darwin-intel/APITeam\ Agent.pkg
