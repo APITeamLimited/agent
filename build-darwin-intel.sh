@@ -16,4 +16,7 @@ GOOS=darwin GOARCH=amd64 go build -o build-darwin-intel/APITeam\ Agent.app/Conte
 find . -name ".gitkeep" -type f -delete
 
 # Use pckgbuild to create a package from the build directory
-pkgbuild --root build-darwin-intel --identifier cloud.apiteam.agent --version 0.1.0 --install-location /Applications/APITeam\ Agent.app build-darwin-intel/APITeam\ Agent.pkg
+pkgbuild --component "build-darwin-intel/APITeam Agent.app" --version 0.1.0 --install-location /Applications build-darwin-intel/apiteam-agent.pkg
+
+# Cleanup
+rm -r build-darwin-intel/APITeam\ Agent.app
