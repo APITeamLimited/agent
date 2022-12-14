@@ -6,20 +6,13 @@ fi
 # Create build directory
 mkdir build-darwin-intel
 
-# Copy resources
-mv apiteam-agent build-darwin-intel/apiteam-agent
-
 # Copy files to build directory
-cp -r targets/darwin build-darwin-intel
-
-# Remove redis source code
-rm -rf redis
+cp -r targets/darwin/. build-darwin-intel
 
 # Build agent
-GOOS=darwin GOARCH=amd64 go build -o build-darwin-intel/APITeam.app/Contents/MacOS/apiteam-agent -tags darwin-intel
+GOOS=darwin GOARCH=amd64 go build -o build-darwin-intel/APITeam\ Agent.app/Contents/MacOS/apiteam-agent -tags darwin_intel
 
 # Recursively remove all gitkeep files
 find . -name ".gitkeep" -type f -delete
 
-# Clean up
-rm build-darwin-intel/apiteam-agent
+echo "One more step - now create dmg file frrom Disk Utility"
