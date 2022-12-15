@@ -80,9 +80,9 @@ func runAgentServer(
 				case "newJob":
 					handleNewJob(msg, &conn, &runningJobs, setJobCount, orchestratorClient)
 				case "abortJob":
-					handleAbortJob(msg, &conn, &runningJobs, setJobCount, orchestratorClient)
+					handleAbortJob(msg, &conn, &runningJobs, setJobCount, orchestratorClient, connections)
 				case "abortAllJobs":
-					handleAbortAllJobs(&runningJobs, &conn, setJobCount, orchestratorClient)
+					handleAbortAllJobs(&runningJobs, &conn, setJobCount, orchestratorClient, connections)
 				case "jobUpdate":
 					handleJobUpdate(msg, &conn, &runningJobs, orchestratorClient)
 				case "agentVersion":
@@ -101,7 +101,7 @@ func runAgentServer(
 		go func() {
 			for {
 				<-abortAllChannel
-				handleAbortAllJobs(&runningJobs, &conn, setJobCount, orchestratorClient)
+				handleAbortAllJobs(&runningJobs, &conn, setJobCount, orchestratorClient, connections)
 			}
 		}()
 	})

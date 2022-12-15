@@ -8,10 +8,10 @@ import (
 )
 
 func handleAbortAllJobs(runningJobs *map[string]libOrch.Job, conn *net.Conn, setJobCount func(int),
-	orchestratorClient *redis.Client) {
+	orchestratorClient *redis.Client, connections map[string]*net.Conn) {
 	// Loop through all running jobs and cancel them
 	for _, job := range *runningJobs {
-		processAbortion(job, runningJobs, setJobCount, orchestratorClient)
+		processAbortion(job, runningJobs, setJobCount, orchestratorClient, connections)
 	}
 	setJobCount(len(*runningJobs))
 
