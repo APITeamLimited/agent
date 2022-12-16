@@ -2,18 +2,11 @@
 
 APITeam Agent allows you to send requests and run load tests from your local machine.
 
-
 ## Installation
 
 APITeam Agent is available for download from the [APITeam website](https://apiteam.cloud/agent).
 
-Alternatively you can compile it from source:
-
-```bash
-$ git clone https://gitub.com/APITeamLimited/agent.git
-$ cd agent
-$ go build main.go -o apiteam-agent
-```
+Alternatively you can compile it from source by running a platform specific build script or compiling the go executable with a platform build tag (see build scripts for specific build tags).
 
 ## Usage
 

@@ -7,20 +7,20 @@
     "version": "0.1.0",
     "files": [
     {
-        "from": "build-agent-linux/apiteam-agent",
+        "from": "build-linux/apiteam-agent",
         "to": "usr/bin",
-        "base" : "build-agent-linux/",
+        "base" : "build-linux/",
         "fperm": "0755"
     }
     ],
     "menus": [
     {
         "name": "APITeam Agent",
+        "generic-name": "API Development and Load Testing",
         "description": "Local API Development and Load Testing",
         "icon": "logo/apiteam-logo.png",
         "exec": "apiteam-agent",
-        "categories": "Development;",
-        "startup-notify": true
+        "categories": "Development;"
     }
     ]
 }
