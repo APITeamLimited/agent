@@ -44,7 +44,7 @@ func runOrchestrator() {
 	_ = os.Setenv("ORCHESTRATOR_REDIS_PORT", libAgent.OrchestratorRedisPort)
 	_ = os.Setenv("ORCHESTRATOR_REDIS_PASSWORD", "")
 
-	go orchestrator.Run(false)
+	go orchestrator.Run(false, false)
 }
 
 func runWorker() {
