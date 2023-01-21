@@ -16,7 +16,7 @@ GOOS=darwin GOARCH=arm64 go build -o build-darwin-arm/APITeam\ Agent.app/Content
 find . -name ".gitkeep" -type f -delete
 
 # Use pckgbuild to create a package from the build directory
-pkgbuild --component "build-darwin-arm/APITeam Agent.app" --version 0.1.0 --install-location /Applications build-darwin-arm/apiteam-agent.pkg
+pkgbuild --component "build-darwin-arm/APITeam Agent.app" --version 0.1.20 --install-location /Applications build-darwin-arm/apiteam-agent.pkg
 
 # Cleanup
 rm -r build-darwin-arm/APITeam\ Agent.app
