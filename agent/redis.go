@@ -22,17 +22,17 @@ func setupChildProcesses() {
 
 // Spawns child redis processes, these are terminated automatically when the agent exits
 func spawnChildServers() {
-	be, err := byteexec.New(redis_server.RedisServer, getRedisFileName())
+	be, err := byteexec.New(redis_server.RedisServer, getRedisPath())
 	if err != nil {
 		panic(err)
 	}
 
-	err = be.Command(fmt.Sprintf("--port %s", libAgent.OrchestratorRedisPort), "--save", "", "--appendonly", "no").Start()
+	err = be.Command("--port", libAgent.OrchestratorRedisPort, "--save", "", "--appendonly", "no").Start()
 	if err != nil {
 		panic(err)
 	}
 
-	err = be.Command(fmt.Sprintf("--port %s", libAgent.WorkerRedisPort), "--save", "", "--appendonly", "no").Start()
+	err = be.Command("--port", libAgent.WorkerRedisPort, "--save", "", "--appendonly", "no").Start()
 	if err != nil {
 		panic(err)
 	}
@@ -56,14 +56,23 @@ func runWorker() {
 	go worker.Run(false)
 }
 
-func getRedisFileName() string {
+func getRedisPath() string {
 	system := runtime.GOOS
 
 	if system == "windows" {
-		return "redis-server-agent.exe"
+		// Return path to temp directory
+		return "redis-server-windows"
+	} else if system == "linux" {
+		return "redis-server-linux"
+	} else if system == "darwin" {
+		if runtime.GOARCH == "arm64" {
+			return "redis-server-darwin-arm"
+		} else {
+			return "redis-server-darwin-intel"
+		}
 	}
 
-	return "redis-server-agent"
+	panic(fmt.Sprintf("Unsupported system: %s, arch: %s", system, runtime.GOARCH))
 }
 
 // Instructs the redis servers to immediately terminate
