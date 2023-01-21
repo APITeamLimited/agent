@@ -16,48 +16,57 @@ import (
 	"github.com/getlantern/byteexec"
 )
 
-func setupChildProcesses() {
-	spawnChildServers()
+func setupChildProcesses(windowsTerminationChan chan bool) {
+	spawnChildServers(windowsTerminationChan)
 	runOrchestrator()
 	runWorker()
 }
 
 // Spawns child redis processes, these are terminated automatically when the agent exits
-func spawnChildServers() {
+func spawnChildServers(windowsTerminationChan chan bool) {
 	redisPath := getRedisPath()
-
-	if runtime.GOOS == "windows" {
-		// Execute redis-server.exe using os/exec
-		orchestratorRedisCommand := exec.Command(redisPath, "--port", libAgent.OrchestratorRedisPort, "--save", "", "--appendonly", "no")
-
-		orchestratorRedisCommand.SysProcAttr = &syscall.SysProcAttr{
-			HideWindow: true,
-		}
-
-		orchestratorRedisCommand.Stdout = os.Stdout
-		err := orchestratorRedisCommand.Start()
-		if err != nil {
-			panic(err)
-		}
-
-		workerRedisCommand := exec.Command(redisPath, "--port", libAgent.WorkerRedisPort, "--save", "", "--appendonly", "no")
-
-		workerRedisCommand.SysProcAttr = &syscall.SysProcAttr{
-			HideWindow: true,
-		}
-
-		workerRedisCommand.Stdout = os.Stdout
-		err = workerRedisCommand.Start()
-		if err != nil {
-			panic(err)
-		}
-
-		return
-	}
 
 	be, err := byteexec.New(redis_server.RedisServer, redisPath)
 	if err != nil {
 		panic(err)
+	}
+
+	if runtime.GOOS == "windows" {
+		go func() {
+			// Execute redis-server.exe using os/exec
+			orchestratorRedisCommand := exec.Command(redisPath, "--port", libAgent.OrchestratorRedisPort, "--save", "", "--appendonly", "no")
+
+			orchestratorRedisCommand.SysProcAttr = &syscall.SysProcAttr{
+				HideWindow: true,
+			}
+
+			orchestratorRedisCommand.Stdout = os.Stdout
+			err := orchestratorRedisCommand.Start()
+			if err != nil {
+				panic(err)
+			}
+
+			workerRedisCommand := exec.Command(redisPath, "--port", libAgent.WorkerRedisPort, "--save", "", "--appendonly", "no", "--protected-mode", "no")
+
+			workerRedisCommand.SysProcAttr = &syscall.SysProcAttr{
+				HideWindow: true,
+			}
+
+			workerRedisCommand.Stdout = os.Stdout
+			err = workerRedisCommand.Start()
+			if err != nil {
+				panic(err)
+			}
+
+			// Wait for the agent to exit
+			<-windowsTerminationChan
+
+			// Kill the redis servers
+			_ = orchestratorRedisCommand.Process.Kill()
+			_ = workerRedisCommand.Process.Kill()
+		}()
+
+		return
 	}
 
 	err = be.Command("--port", libAgent.OrchestratorRedisPort, "--save", "", "--appendonly", "no").Start()
@@ -69,6 +78,8 @@ func spawnChildServers() {
 	if err != nil {
 		panic(err)
 	}
+
+	<-windowsTerminationChan
 }
 
 func runOrchestrator() {
@@ -111,7 +122,12 @@ func getRedisPath() string {
 }
 
 // Instructs the redis servers to immediately terminate
-func stopRedisClients() {
+func stopRedisClients(windowsTerminationChan chan bool) {
+	if runtime.GOOS == "windows" {
+		windowsTerminationChan <- true
+		return
+	}
+
 	orchestratorRedis := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", libAgent.OrchestratorRedisHost, libAgent.OrchestratorRedisPort),
 		Username: "default",
