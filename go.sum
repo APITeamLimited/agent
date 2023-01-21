@@ -55,8 +55,8 @@ cloud.google.com/go/storage v1.6.0/go.mod h1:N7U0C8pVQ/+NIKOBQyamJIeKQKkZ+mxpohl
 cloud.google.com/go/storage v1.8.0/go.mod h1:Wv1Oy7z6Yz3DshWRJFhqM/UCfaWIRTdp0RXyy7KQOVs=
 cloud.google.com/go/storage v1.10.0/go.mod h1:FLPqc6j+Ki4BU591ie1oL6qBQGu2Bl/tZ9ullr3+Kg0=
 dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7gZCb22OMCxBHrMx7a5I7Hp++hsVxbQ4BYO7hU=
-github.com/APITeamLimited/globe-test v0.1.3 h1:tTPKOXXuw0YIyuIMmMZnAf5RZKpJ7PJ/oAJ/9VWySeU=
-github.com/APITeamLimited/globe-test v0.1.3/go.mod h1:wucPkye9GDtdnARM62mfgCQ6NFJHehVqGseq0+8M6hs=
+github.com/APITeamLimited/globe-test v0.1.20 h1:ep2T+T+/lvH7ivUGWsXkFBk3BwzO109lXKGcIqbsqkU=
+github.com/APITeamLimited/globe-test v0.1.20/go.mod h1:fUZSzl02Ejo2/HOd99uTGSL7qwIpJvUj/d/wjLjijUY=
 github.com/APITeamLimited/redis/v9 v9.0.6 h1:8LhwMzJtSBHqUeMH5beCFbIePd+lh8/gE0qIzZ83tig=
 github.com/APITeamLimited/redis/v9 v9.0.6/go.mod h1:QMFjN5AqDa8vvjyXxLYGdzuVtScV7xqfzqC80gO5qoE=
 github.com/Azure/go-ntlmssp v0.0.0-20220621081337-cb9428e4ac1e h1:NeAW1fUYUEWhft7pkxDf6WoUvEZJ/uOKsvtpjLnn8MU=

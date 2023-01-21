@@ -3,7 +3,7 @@ module github.com/APITeamLimited/agent
 go 1.18
 
 require (
-	github.com/APITeamLimited/globe-test v0.1.3
+	github.com/APITeamLimited/globe-test v0.1.20
 	github.com/APITeamLimited/redis/v9 v9.0.6
 	github.com/getlantern/byteexec v0.0.0-20220903142956-e6ed20032cfd
 	github.com/getlantern/systray v1.2.1
