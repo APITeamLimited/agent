@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"os/exec"
 	"runtime"
 
 	"github.com/APITeamLimited/agent/agent/libAgent"
@@ -22,7 +23,24 @@ func setupChildProcesses() {
 
 // Spawns child redis processes, these are terminated automatically when the agent exits
 func spawnChildServers() {
-	be, err := byteexec.New(redis_server.RedisServer, getRedisPath())
+	redisPath := getRedisPath()
+
+	if runtime.GOOS == "windows" {
+		// Execute redis-server.exe using os/exec
+		err := exec.Command(redisPath, "--port", libAgent.OrchestratorRedisPort, "--save", "", "--appendonly", "no").Start()
+		if err != nil {
+			panic(err)
+		}
+
+		err = exec.Command(redisPath, "--port", libAgent.WorkerRedisPort, "--save", "", "--appendonly", "no").Start()
+		if err != nil {
+			panic(err)
+		}
+
+		return
+	}
+
+	be, err := byteexec.New(redis_server.RedisServer, redisPath)
 	if err != nil {
 		panic(err)
 	}
@@ -60,8 +78,10 @@ func getRedisPath() string {
 	system := runtime.GOOS
 
 	if system == "windows" {
+		userName := os.Getenv("USERNAME")
+
 		// Return path to temp directory
-		return "redis-server-windows"
+		return fmt.Sprintf("C:\\Users\\%s\\AppData\\Local\\Temp\\redis-server-windows", userName)
 	} else if system == "linux" {
 		return "redis-server-linux"
 	} else if system == "darwin" {
