@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"syscall"
 
 	"github.com/APITeamLimited/agent/agent/libAgent"
 	"github.com/APITeamLimited/agent/redis_server"
@@ -27,12 +28,26 @@ func spawnChildServers() {
 
 	if runtime.GOOS == "windows" {
 		// Execute redis-server.exe using os/exec
-		err := exec.Command(redisPath, "--port", libAgent.OrchestratorRedisPort, "--save", "", "--appendonly", "no").Start()
+		orchestratorRedisCommand := exec.Command(redisPath, "--port", libAgent.OrchestratorRedisPort, "--save", "", "--appendonly", "no")
+
+		orchestratorRedisCommand.SysProcAttr = &syscall.SysProcAttr{
+			HideWindow: true,
+		}
+
+		orchestratorRedisCommand.Stdout = os.Stdout
+		err := orchestratorRedisCommand.Start()
 		if err != nil {
 			panic(err)
 		}
 
-		err = exec.Command(redisPath, "--port", libAgent.WorkerRedisPort, "--save", "", "--appendonly", "no").Start()
+		workerRedisCommand := exec.Command(redisPath, "--port", libAgent.WorkerRedisPort, "--save", "", "--appendonly", "no")
+
+		workerRedisCommand.SysProcAttr = &syscall.SysProcAttr{
+			HideWindow: true,
+		}
+
+		workerRedisCommand.Stdout = os.Stdout
+		err = workerRedisCommand.Start()
 		if err != nil {
 			panic(err)
 		}
