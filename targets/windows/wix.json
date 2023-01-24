@@ -18,7 +18,7 @@
     "items": [
       {
         "name": "APITeam Agent",
-        "description": "Debug and load test your local APIs and stream the results to the APITeam Platformo",
+        "description": "Debug and load test your local APIs locally and stream the results to the APITeam Platform",
         "target": "[INSTALLDIR]\\apiteam-agent.exe",
         "wdir": "INSTALLDIR",
         "arguments": "",
