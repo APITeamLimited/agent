@@ -35,24 +35,11 @@ func SpawnChildServers(windowsTerminationChan chan bool) {
 			panic(err)
 		}
 
-		workerRedisCommand := exec.Command(redisPath, "--port", libAgent.WorkerRedisPort, "--save", "", "--appendonly", "no", "--protected-mode", "no")
-
-		workerRedisCommand.SysProcAttr = &syscall.SysProcAttr{
-			HideWindow: true,
-		}
-
-		workerRedisCommand.Stdout = os.Stdout
-		err = workerRedisCommand.Start()
-		if err != nil {
-			panic(err)
-		}
-
 		// Wait for the agent to exit
 		<-windowsTerminationChan
 
 		// Kill the redis servers
 		_ = orchestratorRedisCommand.Process.Kill()
-		_ = workerRedisCommand.Process.Kill()
 	}()
 
 }
