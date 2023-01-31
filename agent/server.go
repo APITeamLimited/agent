@@ -28,7 +28,7 @@ func runAgentServer(
 	runningJobs := make(map[string]libOrch.Job)
 	connections := make(map[string]*net.Conn)
 
-	serverAddress := fmt.Sprintf("localhost:%d", libAgent.AgentPort)
+	serverAddress := fmt.Sprintf("localhost:%s", libAgent.AgentPort)
 
 	mux := http.NewServeMux()
 

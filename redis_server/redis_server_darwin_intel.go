@@ -9,3 +9,8 @@ import (
 
 //go:embed redis-server-darwin-intel
 var RedisServer []byte
+
+// Spawns child redis processes, these are terminated automatically when the agent exits
+func SpawnChildServers(windowsTerminationChan chan bool) {
+	spawnOrchestratorRedisUnix(windowsTerminationChan)
+}

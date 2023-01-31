@@ -5,15 +5,14 @@ import (
 	"github.com/APITeamLimited/globe-test/orchestrator/libOrch"
 )
 
-const AgentPort = 59125
+const AgentPort = "59125"
 
 const OrchestratorRedisHost = "localhost"
 const OrchestratorRedisPort = "59126"
 
-const AgentWorkerName = "localhost"
+const WorkerServerPort = "59127"
 
-const WorkerRedisHost = "localhost"
-const WorkerRedisPort = "59127"
+const AgentWorkerName = "localhost"
 
 const AgentVersion = "0.1.0"
 
@@ -30,9 +29,15 @@ type (
 		Type    string `json:"type"` // "abortJob"
 		Message string `json:"message"`
 	}
+
+	WrappedJobUserUpdate struct {
+		JobId  string
+		Update lib.JobUserUpdate
+	}
+
 	ClientJobUpdateMessage struct {
-		Type    string                   `json:"type"` // "jobUpdate"
-		Message lib.WrappedJobUserUpdate `json:"message"`
+		Type    string               `json:"type"` // "jobUpdate"
+		Message WrappedJobUserUpdate `json:"message"`
 	}
 )
 

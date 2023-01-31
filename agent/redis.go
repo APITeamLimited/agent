@@ -4,82 +4,19 @@ import (
 	"context"
 	"fmt"
 	"os"
-	"os/exec"
 	"runtime"
-	"syscall"
 
 	"github.com/APITeamLimited/agent/agent/libAgent"
 	"github.com/APITeamLimited/agent/redis_server"
 	"github.com/APITeamLimited/globe-test/orchestrator/orchestrator"
 	"github.com/APITeamLimited/globe-test/worker/worker"
 	"github.com/APITeamLimited/redis/v9"
-	"github.com/getlantern/byteexec"
 )
 
 func setupChildProcesses(windowsTerminationChan chan bool) {
-	spawnChildServers(windowsTerminationChan)
+	redis_server.SpawnChildServers(windowsTerminationChan)
 	runOrchestrator()
-	runWorker()
-}
-
-// Spawns child redis processes, these are terminated automatically when the agent exits
-func spawnChildServers(windowsTerminationChan chan bool) {
-	redisPath := getRedisPath()
-
-	be, err := byteexec.New(redis_server.RedisServer, redisPath)
-	if err != nil {
-		panic(err)
-	}
-
-	if runtime.GOOS == "windows" {
-		go func() {
-			// Execute redis-server.exe using os/exec
-			orchestratorRedisCommand := exec.Command(redisPath, "--port", libAgent.OrchestratorRedisPort, "--save", "", "--appendonly", "no")
-
-			orchestratorRedisCommand.SysProcAttr = &syscall.SysProcAttr{
-				HideWindow: true,
-			}
-
-			orchestratorRedisCommand.Stdout = os.Stdout
-			err := orchestratorRedisCommand.Start()
-			if err != nil {
-				panic(err)
-			}
-
-			workerRedisCommand := exec.Command(redisPath, "--port", libAgent.WorkerRedisPort, "--save", "", "--appendonly", "no", "--protected-mode", "no")
-
-			workerRedisCommand.SysProcAttr = &syscall.SysProcAttr{
-				HideWindow: true,
-			}
-
-			workerRedisCommand.Stdout = os.Stdout
-			err = workerRedisCommand.Start()
-			if err != nil {
-				panic(err)
-			}
-
-			// Wait for the agent to exit
-			<-windowsTerminationChan
-
-			// Kill the redis servers
-			_ = orchestratorRedisCommand.Process.Kill()
-			_ = workerRedisCommand.Process.Kill()
-		}()
-
-		return
-	}
-
-	err = be.Command("--port", libAgent.OrchestratorRedisPort, "--save", "", "--appendonly", "no").Start()
-	if err != nil {
-		panic(err)
-	}
-
-	err = be.Command("--port", libAgent.WorkerRedisPort, "--save", "", "--appendonly", "no").Start()
-	if err != nil {
-		panic(err)
-	}
-
-	<-windowsTerminationChan
+	runWorkerServer()
 }
 
 func runOrchestrator() {
@@ -87,38 +24,16 @@ func runOrchestrator() {
 	_ = os.Setenv("ORCHESTRATOR_REDIS_HOST", libAgent.OrchestratorRedisHost)
 	_ = os.Setenv("ORCHESTRATOR_REDIS_PORT", libAgent.OrchestratorRedisPort)
 	_ = os.Setenv("ORCHESTRATOR_REDIS_PASSWORD", "")
+	_ = os.Setenv("SERVICE_URL_OVERRIDE_0", fmt.Sprintf("http://localhost:%s", libAgent.WorkerServerPort))
 
-	go orchestrator.Run(false, false)
+	go orchestrator.Run(false)
 }
 
-func runWorker() {
-	// Set some environment variables
-	_ = os.Setenv("CLIENT_HOST", libAgent.WorkerRedisHost)
-	_ = os.Setenv("CLIENT_PORT", libAgent.WorkerRedisPort)
-	_ = os.Setenv("CLIENT_PASSWORD", "")
+func runWorkerServer() {
+	_ = os.Setenv("WORKER_SERVER_PORT", libAgent.WorkerServerPort)
+	_ = os.Setenv("WORKER_0_DISPLAY_NAME", libAgent.AgentWorkerName)
 
-	go worker.Run(false)
-}
-
-func getRedisPath() string {
-	system := runtime.GOOS
-
-	if system == "windows" {
-		userName := os.Getenv("USERNAME")
-
-		// Return path to temp directory
-		return fmt.Sprintf("C:\\Users\\%s\\AppData\\Local\\Temp\\redis-server-windows", userName)
-	} else if system == "linux" {
-		return "redis-server-linux"
-	} else if system == "darwin" {
-		if runtime.GOARCH == "arm64" {
-			return "redis-server-darwin-arm"
-		} else {
-			return "redis-server-darwin-intel"
-		}
-	}
-
-	panic(fmt.Sprintf("Unsupported system: %s, arch: %s", system, runtime.GOARCH))
+	go worker.RunWorkerServer()
 }
 
 // Instructs the redis servers to immediately terminate
@@ -134,12 +49,5 @@ func stopRedisClients(windowsTerminationChan chan bool) {
 		Password: "",
 	})
 
-	workerRedis := redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%s", libAgent.WorkerRedisHost, libAgent.WorkerRedisPort),
-		Username: "default",
-		Password: "",
-	})
-
 	orchestratorRedis.ShutdownNoSave(context.Background())
-	workerRedis.ShutdownNoSave(context.Background())
 }

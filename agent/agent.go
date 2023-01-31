@@ -3,8 +3,10 @@ package agent
 import (
 	_ "embed"
 	"fmt"
+	"net"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/APITeamLimited/agent/agent/libAgent"
 	"github.com/APITeamLimited/agent/logo"
@@ -17,6 +19,7 @@ const agentVersion = "v0.1.20"
 
 func Run() {
 	ensureNotAlreadyRunning()
+	determineIfPortsFree()
 
 	fmt.Printf("Running APITeam Agent %s\n", agentVersion)
 
@@ -45,11 +48,11 @@ func Run() {
 		setJobCountFunc(0)
 
 		go func() {
-			<-mTitle.ClickedCh
-			// Open the URL in the default browser
-			err := browser.OpenURL("https://apiteam.cloud/agent")
-			if err != nil {
-				panic(err)
+			// CLicked callback
+			for {
+				<-mTitle.ClickedCh
+				// Open the URL in the default browser
+				browser.OpenURL("https://apiteam.cloud/agent")
 			}
 		}()
 
@@ -71,7 +74,7 @@ func Run() {
 }
 
 func ensureNotAlreadyRunning() {
-	serverAddress := fmt.Sprintf("http://localhost:%d/version", libAgent.AgentPort)
+	serverAddress := fmt.Sprintf("http://localhost:%s/version", libAgent.AgentPort)
 	// Ping the server to see if it's already running
 	_, err := http.Get(serverAddress)
 
@@ -83,4 +86,35 @@ func ensureNotAlreadyRunning() {
 	dialog.Message("APITeam Agent is already running. Please close the existing instance before starting a new one.").Title("APITeam Agent").Error()
 
 	os.Exit(0)
+}
+
+func determineIfPortsFree() {
+	// Check if libAgent.AgentPort is free
+	// Check if libAgent.WorkerServerPort is free
+
+	// If not free, show popup
+
+	for _, port := range []string{libAgent.AgentPort, libAgent.WorkerServerPort} {
+		if isOpened(port) {
+			dialog.Message(fmt.Sprintf("Port %s is already in use and is required by APITeam Agent. Please close the application using it and try again.", port)).Title("APITeam Agent").Error()
+			os.Exit(0)
+		}
+	}
+}
+
+func isOpened(port string) bool {
+	timeout := 30 * time.Millisecond
+	target := fmt.Sprintf("localhost:%s", port)
+
+	conn, err := net.DialTimeout("tcp", target, timeout)
+	if err != nil {
+		return false
+	}
+
+	if conn != nil {
+		conn.Close()
+		return true
+	}
+
+	return false
 }
