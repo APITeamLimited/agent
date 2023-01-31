@@ -53,16 +53,19 @@ func Run() {
 			}
 		}()
 
-		setupChildProcesses()
+		// This is used for telling windows child redis clients to terminate
+		windowsTerminationChan := make(chan bool)
+
+		setupChildProcesses(windowsTerminationChan)
 		go runAgentServer(mAbortAll.ClickedCh, setJobCountFunc)
 
 		// Wait for the server to stop before exiting
 		<-mQuit.ClickedCh
+		stopRedisClients(windowsTerminationChan)
 		systray.Quit()
 	}
 
 	systray.Run(systrayContent, func() {
-		stopRedisClients()
 		os.Exit(0)
 	})
 }
