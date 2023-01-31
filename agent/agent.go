@@ -3,15 +3,22 @@ package agent
 import (
 	_ "embed"
 	"fmt"
+	"net/http"
 	"os"
 
+	"github.com/APITeamLimited/agent/agent/libAgent"
 	"github.com/APITeamLimited/agent/logo"
 	"github.com/getlantern/systray"
 	"github.com/pkg/browser"
+	"github.com/sqweek/dialog"
 )
 
+const agentVersion = "v0.1.20"
+
 func Run() {
-	fmt.Println("Running agent")
+	ensureNotAlreadyRunning()
+
+	fmt.Printf("Running APITeam Agent %s\n", agentVersion)
 
 	systrayContent := func() {
 		logoIcon := logo.AgentLogo
@@ -58,4 +65,19 @@ func Run() {
 		stopRedisClients()
 		os.Exit(0)
 	})
+}
+
+func ensureNotAlreadyRunning() {
+	serverAddress := fmt.Sprintf("http://localhost:%d/version", libAgent.AgentPort)
+	// Ping the server to see if it's already running
+	_, err := http.Get(serverAddress)
+
+	if err != nil {
+		return
+	}
+
+	// show popup
+	dialog.Message("APITeam Agent is already running. Please close the existing instance before starting a new one.").Title("APITeam Agent").Error()
+
+	os.Exit(0)
 }

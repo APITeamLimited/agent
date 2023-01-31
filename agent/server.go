@@ -31,6 +31,15 @@ func runAgentServer(
 	serverAddress := fmt.Sprintf("localhost:%d", libAgent.AgentPort)
 
 	mux := http.NewServeMux()
+
+	mux.HandleFunc("/version", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/plain")
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+		fmt.Fprintf(w, libAgent.AgentVersion)
+	})
+
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		conn, _, _, err := ws.UpgradeHTTP(r, w)
 		if err != nil {
