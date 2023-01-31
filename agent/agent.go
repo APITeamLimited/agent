@@ -15,7 +15,7 @@ import (
 	"github.com/sqweek/dialog"
 )
 
-const agentVersion = "v0.1.20"
+const agentVersion = "v0.2.7"
 
 func Run() {
 	ensureNotAlreadyRunning()

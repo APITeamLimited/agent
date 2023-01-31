@@ -4,7 +4,7 @@
     "description": "APITeam Agent - Debug and load test your local APIs and stream the results to the APITeam Platform",
     "homepage": "https://apiteam.cloud/agent",
     "arch": "amd64",
-    "version": "0.1.20",
+    "version": "0.2.7",
     "files": [
     {
         "from": "build-linux/apiteam-agent",
