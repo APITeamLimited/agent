@@ -3,7 +3,7 @@ module github.com/APITeamLimited/agent
 go 1.18
 
 require (
-	github.com/APITeamLimited/globe-test v0.2.7
+	github.com/APITeamLimited/globe-test v0.2.8
 	github.com/APITeamLimited/redis/v9 v9.0.6
 	github.com/getlantern/byteexec v0.0.0-20220903142956-e6ed20032cfd
 	github.com/getlantern/systray v1.2.1
@@ -69,11 +69,12 @@ require (
 	github.com/xdg-go/scram v1.1.1 // indirect
 	github.com/xdg-go/stringprep v1.0.3 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
+	go.mercari.io/go-dnscache v0.0.0-20220124075326-2701c2ab5df5 // indirect
 	go.mongodb.org/mongo-driver v1.10.2 // indirect
 	go.opencensus.io v0.24.0 // indirect
-	go.uber.org/atomic v1.7.0 // indirect
-	go.uber.org/multierr v1.6.0 // indirect
-	go.uber.org/zap v1.19.1 // indirect
+	go.uber.org/atomic v1.10.0 // indirect
+	go.uber.org/multierr v1.9.0 // indirect
+	go.uber.org/zap v1.24.0 // indirect
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d // indirect
 	golang.org/x/net v0.0.0-20221014081412-f15817d10f9b // indirect
 	golang.org/x/oauth2 v0.0.0-20221014153046-6fdb5e3db783 // indirect

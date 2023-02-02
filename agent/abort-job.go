@@ -27,7 +27,8 @@ func handleAbortJob(rawMessage []byte, conn *net.Conn, runningJobs *map[string]l
 	// Ensure job exists in running jobs
 	job, ok := (*runningJobs)[parsedMessage.Message]
 	if !ok {
-		wsutil.WriteServerText(*conn, []byte(fmt.Sprintf("Job does not exist with id %s", parsedMessage.Message)))
+		// Don't throw error as cancellation could be on another user account
+		// this is an anticipated error
 		return
 	}
 

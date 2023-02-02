@@ -32,6 +32,7 @@ func runOrchestrator() {
 func runWorkerServer() {
 	_ = os.Setenv("WORKER_SERVER_PORT", libAgent.WorkerServerPort)
 	_ = os.Setenv("WORKER_0_DISPLAY_NAME", libAgent.AgentWorkerName)
+	_ = os.Setenv("WORKER_STANDALONE", "false")
 
 	go worker.RunWorkerServer()
 }

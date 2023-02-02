@@ -14,7 +14,7 @@ const WorkerServerPort = "59127"
 
 const AgentWorkerName = "localhost"
 
-const AgentVersion = "0.1.0"
+const AgentVersion = "0.2.8"
 
 type (
 	ClientLocalTestManagerMessage struct {
